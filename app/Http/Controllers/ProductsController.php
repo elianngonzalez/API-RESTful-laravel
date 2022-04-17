@@ -1,5 +1,5 @@
 <?php
-
+//para que funcione agregar a las rutas
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,19 +9,27 @@ class ProductsController extends Controller
 {
 	public function index()
 	{
-		return Product::all();
+		return Product::paginate(10);
 	}
 
 	public function show(Product $product)
-	{
-		return $product;
+	{	
+		if ($product) {
+			return $product;
+		}
+		else {
+			return response()->json(['error' => 'Producto no disponible'], 404);
+		}
 	}
 
 	public function store(Request $request)
 	{
 		$product = Product::create($request->all());
 
-		return response()->json($product, 201);
+		return response()->json([
+			'data' => $product,
+			'message' => 'Producto creado correctamente'
+		], 201);
 	}
 
 	public function update(Request $request, Product $product)
